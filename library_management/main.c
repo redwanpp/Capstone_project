@@ -13,6 +13,7 @@ void add_book();
 void view_book();
 void search_book();
 void edit_book();
+void delete_book();
 
 
 typedef struct book_info Info;
@@ -27,7 +28,7 @@ struct book_info {
 
 Info a;
 
-FILE *file;
+FILE *file, *file2;
 
 int main() {
     password();
@@ -39,7 +40,7 @@ void mainmenu() {
     system("cls");
     int choice;
 
-    printf("\n\n \t\t********************Main Menu********************\n");
+    printf("\n\n \t\t*****************Main Menu*****************\n");
 
     printf("\n");
     printf("\t\t 1. add book\n");
@@ -68,7 +69,7 @@ void mainmenu() {
             edit_book();
             break;
         case 5:
-            //delete_book();
+            delete_book();
             break;
         case 6:
             //help();
@@ -143,7 +144,7 @@ void add_book() {
 
     printf("\n\n \t\t ***************** Add Book *************\n");
     
-    file = fopen("Books.bat", "ab+");
+    file = fopen("Books.dat", "ab+");
 
     printf("\t\t Enter Book ID: ");
     scanf("%d", &d);
@@ -180,6 +181,7 @@ void add_book() {
     fclose(file);
 
     printf("\n\n \t\t Add Book Successfully!\n");
+    printf("\n\n press any key......\n");
 
     fflush(stdin);
     getchar();
@@ -196,7 +198,7 @@ void view_book() {
     printf("\n\n \t\t ************ View Book List **********\n\n");
     printf("\tID\tName\tAuthor\tQNT\tRack\n");
 
-    file = fopen("Books.bat",  "rb");
+    file = fopen("Books.dat",  "rb+");
 
     while(fread(&a, sizeof(a), 1, file) == 1) {
         printf("\t%d", a.id);
@@ -226,7 +228,7 @@ void search_book() {
     printf("\n\n \t\t **************** Search Book **************\n");
     printf("\n\t\tSearching..........\n\n");
 
-    file = fopen("Books.bat", "rb");
+    file = fopen("Books.dat", "rb");
 
     printf("\n\t\t Enter ID: ");
     scanf("%d", &scan_id);
@@ -264,7 +266,7 @@ void edit_book() {
 
     printf("\n\n \t\t*************** Edit Search **************");
 
-    file = fopen("Books.bat", "rb+");
+    file = fopen("Books.dat", "rb+");
 
     printf("\n\t\t Enter ID: ");
     scanf("%d", &inpt_id);
@@ -297,6 +299,59 @@ void edit_book() {
 
     printf("\n\n\t\t Press any key....");
     fflush(stdin);
+    getchar();
+
+    mainmenu();
+}
+
+//delete function
+void delete_book() {
+    system("cls");
+
+    int inpt_id, flag = 0;
+    printf("\n\n \t\t ************** Delete Book ***********\n");
+    printf("\n\n\t\t Enter ID for delete Book: ");
+    scanf("%d", &inpt_id);
+
+    file = fopen("Books.dat", "rb+");
+    
+    rewind(file);
+
+    while(fread(&a, sizeof(a), 1, file) == 1) {
+        if(inpt_id == a.id) {
+            printf("\n\t\t Book is Available!");
+            printf("\n\t\t Book name is: %s", a.name);
+            printf("\n\t\t Rack Number: %d", a.rack);
+
+            flag = 1;
+        }
+    }
+
+    if(flag == 0) {
+        printf("\n\t\t Book is not Available");
+    }
+    else {
+        file2 = fopen("text.dat",  "wb+");
+
+        rewind(file);
+        while(fread(&a, sizeof(a), 1, file) == 1) {
+             fseek(file2, ftell(file2)-sizeof(a), 0);
+             fwrite(&a, sizeof(a), 1,file2);
+        }
+    }
+
+    fclose(file);
+    fclose(file2);
+
+    remove("Books.dat");
+    
+    rename("text.dat", "Books.dat");
+
+    file = fopen("Books.dat", "rb");
+
+    fclose(file);
+
+    fflush(stdin) ;
     getchar();
 
     mainmenu();
