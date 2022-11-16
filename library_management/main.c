@@ -14,6 +14,7 @@ void view_book();
 void search_book();
 void edit_book();
 void delete_book();
+void documentation();
 
 
 typedef struct book_info Info;
@@ -48,7 +49,7 @@ void mainmenu() {
     printf("\t\t 3. search book\n");
     printf("\t\t 4. edit book\n");
     printf("\t\t 5. delete book\n");
-    printf("\t\t 6. help\n");
+    printf("\t\t 6. documentation\n");
     printf("\t\t 7. exit\n");
 
     printf("\n\n \t\t *********************************\n");
@@ -72,7 +73,7 @@ void mainmenu() {
             delete_book();
             break;
         case 6:
-            //help();
+            documentation();
             break;
         case 7:
             exit(0);
@@ -352,6 +353,23 @@ void delete_book() {
     fclose(file);
 
     fflush(stdin) ;
+    getchar();
+
+    mainmenu();
+}
+
+//documentation function
+void documentation() {
+    system("cls");
+
+    printf("\n\n \t\t *************** Documentation ***************\n\n");
+    printf("\t\t  1. This is a simple libray management programe\n\n");
+    printf("\t\t  2. Password: admin\n\n");
+    printf("\t\t  3. See all feature in main menu\n\n");
+    printf("\t\t  4. For more info contact: \n\t\t\t\tEmail:developer@gmail.com\n\n");
+    printf("\t\t  5. For mainmenu press any key......\n\n");
+
+    fflush(stdin);
     getchar();
 
     mainmenu();
